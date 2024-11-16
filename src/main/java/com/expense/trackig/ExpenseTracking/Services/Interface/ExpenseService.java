@@ -1,6 +1,6 @@
-package Services.Interface;
+package com.expense.trackig.ExpenseTracking.Services.Interface;
 
-import Modules.Expense;
+import com.expense.trackig.ExpenseTracking.Modules.Expense;
 
 import java.util.List;
 

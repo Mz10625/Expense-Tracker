@@ -1,6 +1,6 @@
-package Repository;
+package com.expense.trackig.ExpenseTracking.Repository;
 
-import Modules.User;
+import com.expense.trackig.ExpenseTracking.Modules.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface UserRepository extends MongoRepository<User, String> {

@@ -1,10 +1,12 @@
-package Services.Implementation;
+package com.expense.trackig.ExpenseTracking.Services.Implementation;
 
-import Modules.Category;
-import Repository.CategoryRepository;
-import Services.Interface.CategoriesService;
+import com.expense.trackig.ExpenseTracking.Modules.Category;
+import com.expense.trackig.ExpenseTracking.Repository.CategoryRepository;
+import com.expense.trackig.ExpenseTracking.Services.Interface.CategoriesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CategoryServiceImpl implements CategoriesService {
@@ -18,5 +20,10 @@ public class CategoryServiceImpl implements CategoriesService {
     @Override
     public void removeCategory(String name) {
         categoryRepository.deleteById(name);
+    }
+
+    @Override
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }

@@ -1,4 +1,4 @@
-package Modules;
+package com.expense.trackig.ExpenseTracking.Modules;
 
 
 import lombok.AllArgsConstructor;
@@ -10,10 +10,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-@Document(collection = "categories")
-public class Category {
+@AllArgsConstructor
+@Document(collection = "budget")
+public class Budget {
     @Id
-    private String name;
+    private String id;
+    private String category;
+    private String month;
+    private int year;
+    private double allocatedBudget;
 }

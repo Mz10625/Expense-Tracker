@@ -1,5 +1,4 @@
-package Modules;
-
+package com.expense.trackig.ExpenseTracking.Modules;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,16 +7,19 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "budget")
-public class Budget {
+@NoArgsConstructor
+@Document(collection = "expense")
+public class Expense {
     @Id
     private String id;
     private String category;
-    private String month;
-    private int year;
-    private double allocatedBudget;
+    private String item;
+    private Date date;
+    private double amount;
+    private String paymentMethod;
+    private String Note;
 }

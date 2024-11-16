@@ -1,8 +1,8 @@
-package Services.Implementation;
+package com.expense.trackig.ExpenseTracking.Services.Implementation;
 
-import Modules.Budget;
-import Repository.BudgetRepository;
-import Services.Interface.BudgetService;
+import com.expense.trackig.ExpenseTracking.Modules.Budget;
+import com.expense.trackig.ExpenseTracking.Repository.BudgetRepository;
+import com.expense.trackig.ExpenseTracking.Services.Interface.BudgetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
-package Repository;
+package com.expense.trackig.ExpenseTracking.Repository;
 
-import Modules.Expense;
+import com.expense.trackig.ExpenseTracking.Modules.Expense;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.time.LocalDate;

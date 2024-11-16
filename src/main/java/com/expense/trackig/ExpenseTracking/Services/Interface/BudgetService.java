@@ -1,6 +1,6 @@
-package Services.Interface;
+package com.expense.trackig.ExpenseTracking.Services.Interface;
 
-import Modules.Budget;
+import com.expense.trackig.ExpenseTracking.Modules.Budget;
 
 public interface BudgetService {
     public void saveBudget(Budget budget);

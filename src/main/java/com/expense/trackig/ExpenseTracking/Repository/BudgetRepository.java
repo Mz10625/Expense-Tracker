@@ -1,7 +1,7 @@
-package Repository;
+package com.expense.trackig.ExpenseTracking.Repository;
 
 
-import Modules.Budget;
+import com.expense.trackig.ExpenseTracking.Modules.Budget;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
