@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/public")
 public class publicController {
-    @GetMapping("/loginForm")
+    @GetMapping("/login")
     public String loginForm(){
         return "login";
     }
 
-    @GetMapping("/signInForm")
+    @GetMapping("/signIn")
     public String signInForm(){
         return "sign_in";
     }
