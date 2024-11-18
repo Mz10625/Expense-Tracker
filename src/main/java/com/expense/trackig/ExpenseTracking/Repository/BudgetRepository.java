@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface BudgetRepository extends MongoRepository<Budget,String> {
     List<Budget> findBudgetByCategory(String category);
+    Budget findBudgetByMonthAndYear(String month,int year);
+    void deleteBudgetByMonthAndYear(String month, int year);
 }

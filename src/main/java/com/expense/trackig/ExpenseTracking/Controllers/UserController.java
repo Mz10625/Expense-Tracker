@@ -1,6 +1,7 @@
 package com.expense.trackig.ExpenseTracking.Controllers;
 import com.expense.trackig.ExpenseTracking.Modules.User;
 import com.expense.trackig.ExpenseTracking.Services.Interface.UserService;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,14 @@ public class UserController {
         User newUser = new User(email, password);
         userService.saveUser(newUser);
         return "redirect:/public/login";
+    }
+    @GetMapping("/logout")
+    public String logout(HttpServletResponse response){
+        Cookie cookie = new Cookie("expense_cookie", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return "login";
     }
 }
 

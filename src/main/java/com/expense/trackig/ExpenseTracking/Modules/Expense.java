@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.Date;
+import java.time.LocalDate;
 @Setter
 @Getter
 @AllArgsConstructor
@@ -16,10 +16,10 @@ import java.util.Date;
 public class Expense {
     @Id
     private String id;
-    private String category;
     private String item;
-    private Date date;
+    private String category;
+    private LocalDate date;
     private double amount;
     private String paymentMethod;
-    private String Note;
+    private String note;
 }

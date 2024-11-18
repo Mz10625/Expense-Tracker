@@ -23,10 +23,29 @@ public class BudgetServiceImpl implements BudgetService {
     public double getAllocatedBudget(String month, int year, String category) {
         List<Budget> list = budgetRepository.findBudgetByCategory(category);
         for(Budget budget : list) {
-            if (Objects.equals(budget.getMonth(), month) && budget.getYear() == year) {
+            if (Objects.equals(budget.getMonth().toUpperCase(), month.toUpperCase()) && budget.getYear() == year) {
                 return budget.getAllocatedBudget();
             }
         }
         return 0;
+    }
+    public boolean isBudgetAllocated(String month, int year, String category){
+        return budgetRepository.findBudgetByMonthAndYear(month, year) != null;
+    }
+
+    @Override
+    public void removeBudget(Budget budget) {
+        budgetRepository.deleteBudgetByMonthAndYear(budget.getMonth(), budget.getYear());
+    }
+
+    @Override
+    public boolean isBudgetSufficient(String month, int year, String category, double amount) {
+        System.out.println(month);
+        double allocatedBudget = getAllocatedBudget(month,year,category);
+        System.out.println(allocatedBudget);
+        if(allocatedBudget - amount < 0){
+            return false;
+        }
+        return true;
     }
 }
