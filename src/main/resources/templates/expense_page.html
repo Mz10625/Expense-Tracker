@@ -46,6 +46,7 @@
             </h2>
 
             <input id="categoryInput" type="hidden" th:value="${category}">
+            <input id="emailInput" type="hidden" th:value="${email}">
 
             <label>
                 <select id="monthSelect" class="form-select form-select-sm ms-2 me-1" style="width: auto;" >
@@ -64,8 +65,8 @@
         <div class="d-flex align-items-center">
             <span class="budget-info">Allocated Budget: <span th:text="${allocatedBudget}"></span></span>
             <span class="budget-info">Remaining Budget: <span th:text="${remainingBudget}"></span></span>
-            <a th:href="@{/expense/addExpenseForm/{category}(category=${category})}" class="btn btn-secondary ms-3">Add New Expense</a>
-            <a th:href="@{/budget/add-budget/{category}(category=${category})}" class="btn btn-secondary ms-2">Allocate New Budget</a>
+            <a th:href="@{/expense/addExpenseForm/{category}/{email}(category=${category}, email=${email})}" class="btn btn-secondary ms-3">Add New Expense</a>
+            <a th:href="@{/budget/add-budget/{category}/{email}(category=${category}, email=${email})}" class="btn btn-secondary ms-2">Allocate New Budget</a>
         </div>
     </div>
 
@@ -88,14 +89,12 @@
                 <td th:text="${expense.amount}">45.00</td>
                 <td th:text="${expense.paymentMethod}">Credit Card</td>
                 <td th:text="${expense.note}">Bought</td>
-                <td><a class="btn btn-danger btn-sm" th:href="@{/expense/remove/{id}(id=${expense.id})}">Delete</a></td>
+                <td><a class="btn btn-danger btn-sm" th:href="@{/expense/remove/{id}/{email}(id=${expense.id}, email=${email})}">Delete</a></td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
-
-<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>-->
 <script>
     document.getElementById("monthSelect").addEventListener("change", updateLink);
     document.getElementById("yearSelect").addEventListener("change", updateLink);
@@ -104,8 +103,9 @@
         var selectedMonth = document.getElementById("monthSelect").value;
         var selectedYear = document.getElementById("yearSelect").value;
         var category = document.getElementById("categoryInput").value;
+        var email = document.getElementById("emailInput").value;
         var link = document.getElementById("viewExpensesLink");
-        link.href = '/expense/getExpenses?category='+category+'&month=' + selectedMonth + '&year=' + selectedYear;
+        link.href = '/expense/getExpenses?email='+email+'&category='+category+'&month=' + selectedMonth + '&year=' + selectedYear;
     }
     updateLink();
 </script>

@@ -43,16 +43,16 @@ public class ExpenseController {
             @RequestParam("category") String category,
             @RequestParam("month") String month,
             @RequestParam("year") int year,
+            @RequestParam("email") String email,
             Model model) {
         if(!userService.isLoggedIn(cookie))
             return "redirect:/public/login";
 
-        List<Expense> expenses = expenseService.getAllExpenses(Month.valueOf(month.toUpperCase()).toString(),year,category);
-        double allocatedBudget = budgetService.getAllocatedBudget(month,year,category);
+        List<Expense> expenses = expenseService.getAllExpenses(email,Month.valueOf(month.toUpperCase()).toString(),year,category);
+        double allocatedBudget = budgetService.getAllocatedBudget(email,month,year,category);
 
         double totalSpent = expenses.stream().mapToDouble(Expense::getAmount).sum();
         double remainingBudget = allocatedBudget - totalSpent;
-
 
         model.addAttribute("months",expenseService.getMonths());
         model.addAttribute("years",expenseService.getYears());
@@ -62,47 +62,51 @@ public class ExpenseController {
         model.addAttribute("expenses", expenses);
         model.addAttribute("selectedMonth", month);
         model.addAttribute("selectedYear", Integer.toString(year));
+        model.addAttribute("email", email);
 
         return "expense_page";
     }
 
-    @GetMapping("/addExpenseForm/{category}")
-    public String showExpenseForm(@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@PathVariable("category") String category,Model model) {
+    @GetMapping("/addExpenseForm/{category}/{email}")
+    public String showExpenseForm(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@PathVariable("category") String category,Model model) {
         if(!userService.isLoggedIn(cookie))
             return "redirect:/public/login";
         model.addAttribute("category",category);
+        model.addAttribute("email",email);
         return "add_expense";
     }
 
-    @PostMapping("/addExpense")
+    @PostMapping("/addExpense/{email}")
     public String addExpense(
+            @PathVariable("email") String email,
             @CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@ModelAttribute Expense expense
     ) {
         if(!userService.isLoggedIn(cookie))
             return "redirect:/public/login";
-        if(budgetService.getAllocatedBudget(expense.getDate().getMonth().toString(),expense.getDate().getYear(),expense.getCategory())==0){
+
+        double allocatedBudget = budgetService.getAllocatedBudget(email,expense.getDate().getMonth().toString(),expense.getDate().getYear(),expense.getCategory());
+        if(allocatedBudget == 0){
             return "redirect:/expense/budgetNotAllocatedError";
         }
-        List<Expense> expenses = expenseService.getAllExpenses(expense.getDate().getMonth().toString().toUpperCase(),expense.getDate().getYear(),expense.getCategory());
-        double allocatedBudget = budgetService.getAllocatedBudget(expense.getDate().getMonth().toString().toUpperCase(),expense.getDate().getYear(),expense.getCategory());
+
+        List<Expense> expenses = expenseService.getAllExpenses(email,expense.getDate().getMonth().toString().toUpperCase(),expense.getDate().getYear(),expense.getCategory());
         double totalSpent = expenses.stream().mapToDouble(Expense::getAmount).sum();
-        System.out.println(allocatedBudget+" "+totalSpent);
         if(allocatedBudget - (totalSpent+expense.getAmount()) < 0){
             return "redirect:/expense/insufficientBudget";
         }
         try {
-            expenseService.saveExpense(expense);
+            expenseService.saveExpense(email,expense);
         }catch (Exception e){
             return "add_expense";
         }
-        return "redirect:/expense/getExpenses?category="+expense.getCategory()+"&month="+expense.getDate().getMonth()+"&year="+expense.getDate().getYear()+"";
+        return "redirect:/expense/getExpenses?email="+email+"&category="+expense.getCategory()+"&month="+expense.getDate().getMonth()+"&year="+expense.getDate().getYear()+"";
     }
-    @GetMapping("/remove/{id}")
+    @GetMapping("/remove/{id}/{email}")
     @ResponseBody
-    public String remove(@PathVariable("id") String id,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie){
+    public String remove(@PathVariable("email") String email,@PathVariable("id") String id,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie){
         if(!userService.isLoggedIn(cookie))
             return "redirect:/public/login";
-        expenseService.removeExpense(id);
+        expenseService.removeExpense(email,id);
         return "Expense deleted";
     }
     @GetMapping("/budgetNotAllocatedError")

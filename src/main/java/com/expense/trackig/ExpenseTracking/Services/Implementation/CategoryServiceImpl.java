@@ -34,7 +34,6 @@ public class CategoryServiceImpl implements CategoriesService {
             }
         }
         user.setCategories(categories);
-        System.out.println(categories.size());
         userService.saveUser(user);
     }
 

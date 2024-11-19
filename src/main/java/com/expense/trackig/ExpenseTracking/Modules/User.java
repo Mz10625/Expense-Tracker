@@ -17,8 +17,8 @@ public class User {
     @Id
     private String email;
     private String password;
-    @DocumentReference
-    private List<Budget> budgets;
+    @DBRef
+    private List<Budget> budget;
     @DBRef
     private List<Expense> expenses;
     @DBRef

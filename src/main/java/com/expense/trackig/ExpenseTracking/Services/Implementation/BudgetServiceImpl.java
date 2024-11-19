@@ -1,8 +1,11 @@
 package com.expense.trackig.ExpenseTracking.Services.Implementation;
 
 import com.expense.trackig.ExpenseTracking.Modules.Budget;
+import com.expense.trackig.ExpenseTracking.Modules.Category;
+import com.expense.trackig.ExpenseTracking.Modules.User;
 import com.expense.trackig.ExpenseTracking.Repository.BudgetRepository;
 import com.expense.trackig.ExpenseTracking.Services.Interface.BudgetService;
+import com.expense.trackig.ExpenseTracking.Services.Interface.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +16,21 @@ import java.util.Objects;
 public class BudgetServiceImpl implements BudgetService {
     @Autowired
     private BudgetRepository budgetRepository;
+    @Autowired
+    private UserService userService;
 
     @Override
-    public void saveBudget(Budget budget) {
-        budgetRepository.save(budget);
+    public void saveBudget(String email, Budget budget) {
+        User user = userService.getUserByEmail(email);
+        Budget savedBudget = budgetRepository.save(budget);
+        user.getBudget().add(savedBudget);
+        userService.saveUser(user);
     }
 
     @Override
-    public double getAllocatedBudget(String month, int year, String category) {
-        List<Budget> list = budgetRepository.findBudgetByCategory(category);
+    public double getAllocatedBudget(String email,String month, int year, String category) {
+        User user = userService.getUserByEmail(email);
+        List<Budget> list = user.getBudget();
         for(Budget budget : list) {
             if (Objects.equals(budget.getMonth().toUpperCase(), month.toUpperCase()) && budget.getYear() == year) {
                 return budget.getAllocatedBudget();
@@ -29,23 +38,37 @@ public class BudgetServiceImpl implements BudgetService {
         }
         return 0;
     }
-    public boolean isBudgetAllocated(String month, int year, String category){
-        return budgetRepository.findBudgetByMonthAndYear(month, year) != null;
-    }
-
-    @Override
-    public void removeBudget(Budget budget) {
-        budgetRepository.deleteBudgetByMonthAndYear(budget.getMonth(), budget.getYear());
-    }
-
-    @Override
-    public boolean isBudgetSufficient(String month, int year, String category, double amount) {
-        System.out.println(month);
-        double allocatedBudget = getAllocatedBudget(month,year,category);
-        System.out.println(allocatedBudget);
-        if(allocatedBudget - amount < 0){
-            return false;
+    public boolean isBudgetAllocated(String email,String month, int year, String category){
+        User user = userService.getUserByEmail(email);
+        List<Budget> budgets = user.getBudget();
+        for (Budget budget: budgets) {
+            if(Objects.equals(budget.getMonth(), month) && budget.getYear() == year){
+                return true;
+            }
         }
-        return true;
+        return false;
     }
+
+    @Override
+    public void removeBudget(String email,Budget budget) {
+        User user = userService.getUserByEmail(email);
+        List<Budget> budgets = user.getBudget();
+        for (Budget c: budgets) {
+            if(c.getMonth().equals(budget.getMonth()) && c.getYear() == budget.getYear()){
+                budgets.remove(c);
+                break;
+            }
+        }
+        user.setBudget(budgets);
+        userService.saveUser(user);
+    }
+
+//    @Override
+//    public boolean isBudgetSufficient(String email,String month, int year, String category, double amount) {
+//        double allocatedBudget = getAllocatedBudget(email,month,year,category);
+//        if(allocatedBudget - amount < 0){
+//            return false;
+//        }
+//        return true;
+//    }
 }

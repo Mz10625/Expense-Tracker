@@ -40,9 +40,10 @@
 
     <h2 class="form-title">Add New Budget</h2>
 
-    <form th:action="@{/budget/add-budget}" th:method="post">
+    <form th:action="@{/budget/add-budget/{email}(email=${email})}" th:method="post">
 
         <input type="hidden" name="category" th:value="${category}">
+
 
         <div class="mb-3">
             <label for="month" class="form-label">Month</label>
