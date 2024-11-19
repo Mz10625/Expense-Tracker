@@ -4,14 +4,12 @@ import com.expense.trackig.ExpenseTracking.Modules.Expense;
 import com.expense.trackig.ExpenseTracking.Services.Interface.BudgetService;
 import com.expense.trackig.ExpenseTracking.Services.Interface.ExpenseService;
 import com.expense.trackig.ExpenseTracking.Services.Interface.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Month;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -88,7 +86,7 @@ public class ExpenseController {
         double allocatedBudget = budgetService.getAllocatedBudget(expense.getDate().getMonth().toString().toUpperCase(),expense.getDate().getYear(),expense.getCategory());
         double totalSpent = expenses.stream().mapToDouble(Expense::getAmount).sum();
         System.out.println(allocatedBudget+" "+totalSpent);
-        if(allocatedBudget - totalSpent < 0){
+        if(allocatedBudget - (totalSpent+expense.getAmount()) < 0){
             return "redirect:/expense/insufficientBudget";
         }
         try {
