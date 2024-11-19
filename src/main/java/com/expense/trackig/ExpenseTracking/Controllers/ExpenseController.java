@@ -22,10 +22,11 @@ public class ExpenseController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/{category}")
-    public String showExpensePage(@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@PathVariable("category") String category,Model model){
+    @GetMapping("/{category}/{email}")
+    public String showExpensePage(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@PathVariable("category") String category,Model model){
         if(!userService.isLoggedIn(cookie))
             return "redirect:/public/login";
+        model.addAttribute("email",email);
         model.addAttribute("selectedMonth","November");
         model.addAttribute("months",expenseService.getMonths());
         model.addAttribute("years",expenseService.getYears());

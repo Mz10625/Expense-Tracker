@@ -25,12 +25,13 @@ public class UserServiceImpl implements UserService {
     public void saveUser(User user) {
         userRepository.save(user);
     }
+
     @Override
     public void setCookie(HttpServletResponse response) {
         Cookie cookie = new Cookie("expense_cookie",this.cookie);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
-        cookie.setMaxAge(3600);       // 1-hour
+        cookie.setMaxAge(1800);       // 30-mins
         cookie.setPath("/");
         response.addCookie(cookie);
     }

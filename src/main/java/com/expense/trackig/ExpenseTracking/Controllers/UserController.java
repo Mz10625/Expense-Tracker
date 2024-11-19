@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -20,7 +22,7 @@ public class UserController {
            return "redirect:/public/login";
        }
         userService.setCookie(response);
-        return "redirect:/category/dashboard";
+        return "redirect:/category/dashboard/"+u.getEmail();
     }
     @PostMapping("/sign-in")
     public String sign_in(@RequestParam String email, @RequestParam String password, Model model) {
@@ -28,7 +30,7 @@ public class UserController {
             model.addAttribute("error", "Email already in use");
             return "sign_in";
         }
-        User newUser = new User(email, password);
+        User newUser = new User(email, password, new ArrayList<>(), new ArrayList<>(),new ArrayList<>());
         userService.saveUser(newUser);
         return "redirect:/public/login";
     }

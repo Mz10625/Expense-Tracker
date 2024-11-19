@@ -17,35 +17,36 @@ public class CategoryController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/dashboard")
-    public String dashboard(@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,Model model){
+    @GetMapping("/dashboard/{email}")
+    public String dashboard(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,Model model){
         if(!userService.isLoggedIn(cookie))
             return "redirect:/public/login";
-        model.addAttribute("categories",categoryService.getAllCategories());
+        model.addAttribute("categories",categoryService.getAllCategories(email));
+        model.addAttribute("email",email);
         return "dashboard";
     }
 
-    @PostMapping("/add")
-    public String addCategory(@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@ModelAttribute Category category){
+    @PostMapping("/add/{email}")
+    public String addCategory(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@ModelAttribute Category category){
         if(!userService.isLoggedIn(cookie))
             return "redirect:/public/login";
         try {
-            categoryService.saveCategory(category);
+            categoryService.saveCategory(email,category);
         }catch (Exception e){
             return "redirect:/category/category-not-added";
         }
-        return "redirect:/category/dashboard";
+        return "redirect:/category/dashboard/"+email;
     }
-    @GetMapping("/remove/{name}")
-    public String removeCategory(@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@PathVariable("name") String name){
+    @GetMapping("/remove/{email}/{name}")
+    public String removeCategory(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@PathVariable("name") String name){
         if(!userService.isLoggedIn(cookie))
             return "redirect:/public/login";
         try {
-            categoryService.removeCategory(name);
+            categoryService.removeCategory(email,name);
         }catch (Exception e){
             return "redirect:/category/category-not-removed";
         }
-        return "redirect:/category/dashboard";
+        return "redirect:/category/dashboard/"+email;
     }
 
     @GetMapping("/category-not-added")

@@ -43,7 +43,6 @@ public class BudgetController {
             }
             budgetService.saveBudget(budget);
         }catch (Exception e){
-            System.out.println(e);
             return "redirect:/budget/add-budget/"+budget.getCategory();
         }
         return "redirect:/expense/getExpenses?category="+budget.getCategory()+"&month="+ Month.valueOf(budget.getMonth().toUpperCase()) +"&year="+budget.getYear()+"";
