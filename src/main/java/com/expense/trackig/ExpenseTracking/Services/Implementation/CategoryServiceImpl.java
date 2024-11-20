@@ -4,7 +4,6 @@ import com.expense.trackig.ExpenseTracking.Modules.Budget;
 import com.expense.trackig.ExpenseTracking.Modules.Category;
 import com.expense.trackig.ExpenseTracking.Modules.Expense;
 import com.expense.trackig.ExpenseTracking.Modules.User;
-import com.expense.trackig.ExpenseTracking.Repository.BudgetRepository;
 import com.expense.trackig.ExpenseTracking.Repository.CategoryRepository;
 import com.expense.trackig.ExpenseTracking.Services.Interface.BudgetService;
 import com.expense.trackig.ExpenseTracking.Services.Interface.CategoriesService;

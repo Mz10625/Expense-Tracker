@@ -1,7 +1,6 @@
 package com.expense.trackig.ExpenseTracking.Services.Implementation;
 
 import com.expense.trackig.ExpenseTracking.Modules.Budget;
-import com.expense.trackig.ExpenseTracking.Modules.Category;
 import com.expense.trackig.ExpenseTracking.Modules.User;
 import com.expense.trackig.ExpenseTracking.Repository.BudgetRepository;
 import com.expense.trackig.ExpenseTracking.Services.Interface.BudgetService;

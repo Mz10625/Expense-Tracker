@@ -1,6 +1,5 @@
 package com.expense.trackig.ExpenseTracking.Services.Implementation;
 
-import com.expense.trackig.ExpenseTracking.Modules.Category;
 import com.expense.trackig.ExpenseTracking.Modules.Expense;
 import com.expense.trackig.ExpenseTracking.Modules.User;
 import com.expense.trackig.ExpenseTracking.Repository.ExpenseRepository;
@@ -8,11 +7,8 @@ import com.expense.trackig.ExpenseTracking.Services.Interface.ExpenseService;
 import com.expense.trackig.ExpenseTracking.Services.Interface.UserService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
