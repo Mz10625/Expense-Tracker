@@ -8,6 +8,7 @@ import com.expense.trackig.ExpenseTracking.Services.Interface.ExpenseService;
 import com.expense.trackig.ExpenseTracking.Services.Interface.UserService;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,7 +36,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public void saveExpense(String email,Expense expense) {
         User user = userService.getUserByEmail(email);
-        user.getExpenses().add(expense);
+        Expense expense1 = expenseRepository.save(expense);
+        user.getExpenses().add(expense1);
         userService.saveUser(user);
     }
 
@@ -50,8 +52,13 @@ public class ExpenseServiceImpl implements ExpenseService {
             }
         }
         user.setExpenses(expenses);
+        expenseRepository.deleteById(id);
         userService.saveUser(user);
-//        expenseRepository.deleteById(id);
+    }
+
+    @Override
+    public void removeExpenseById(String id) {
+        expenseRepository.deleteById(id);
     }
 
     @Override
@@ -61,7 +68,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         List<Expense> expenses = user.getExpenses();
         for (Expense e: expenses) {
-            if(e.getCategory().equals(category) && e.getDate().getMonth().equals(month) && e.getDate().getYear() == year){
+            if(e.getDate().getMonth().toString().equals(month) && e.getCategory().equals(category) && e.getDate().getYear() == year){
                 monthExpenses.add(e);
             }
         }

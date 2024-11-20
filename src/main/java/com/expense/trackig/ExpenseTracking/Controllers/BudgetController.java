@@ -39,7 +39,7 @@ public class BudgetController {
         if(!userService.isLoggedIn(cookie))
             return "redirect:/public/login";
         try{
-            if(budgetService.isBudgetAllocated(email,budget.getMonth(), budget.getYear(), budget.getCategory())){
+            if(budgetService.getAllocatedBudget(email,budget.getMonth(), budget.getYear(), budget.getCategory()) != 0){
                 budgetService.removeBudget(email,budget);
             }
             budgetService.saveBudget(email,budget);
@@ -47,6 +47,6 @@ public class BudgetController {
             System.out.println(e);
             return "redirect:/budget/add-budget/"+budget.getCategory()+"/"+email;
         }
-        return "redirect:/expense/getExpenses?email="+email+"&category="+budget.getCategory()+"&month="+ Month.valueOf(budget.getMonth().toUpperCase()) +"&year="+budget.getYear()+"";
+        return "redirect:/expense/getExpenses?email="+email+"&category="+budget.getCategory()+"&month="+ budget.getMonth()+"&year="+budget.getYear()+"";
     }
 }

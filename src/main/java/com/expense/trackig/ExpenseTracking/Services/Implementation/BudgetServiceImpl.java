@@ -32,21 +32,11 @@ public class BudgetServiceImpl implements BudgetService {
         User user = userService.getUserByEmail(email);
         List<Budget> list = user.getBudget();
         for(Budget budget : list) {
-            if (Objects.equals(budget.getMonth().toUpperCase(), month.toUpperCase()) && budget.getYear() == year) {
+            if (budget.getCategory().equals(category) && Objects.equals(budget.getMonth().toUpperCase(), month.toUpperCase()) && budget.getYear() == year) {
                 return budget.getAllocatedBudget();
             }
         }
         return 0;
-    }
-    public boolean isBudgetAllocated(String email,String month, int year, String category){
-        User user = userService.getUserByEmail(email);
-        List<Budget> budgets = user.getBudget();
-        for (Budget budget: budgets) {
-            if(Objects.equals(budget.getMonth(), month) && budget.getYear() == year){
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -54,7 +44,8 @@ public class BudgetServiceImpl implements BudgetService {
         User user = userService.getUserByEmail(email);
         List<Budget> budgets = user.getBudget();
         for (Budget c: budgets) {
-            if(c.getMonth().equals(budget.getMonth()) && c.getYear() == budget.getYear()){
+            if(c.getCategory().equals(budget.getCategory()) && c.getMonth().equals(budget.getMonth()) && c.getYear() == budget.getYear()){
+                removeBudgetById(c.getId());
                 budgets.remove(c);
                 break;
             }
@@ -63,12 +54,10 @@ public class BudgetServiceImpl implements BudgetService {
         userService.saveUser(user);
     }
 
-//    @Override
-//    public boolean isBudgetSufficient(String email,String month, int year, String category, double amount) {
-//        double allocatedBudget = getAllocatedBudget(email,month,year,category);
-//        if(allocatedBudget - amount < 0){
-//            return false;
-//        }
-//        return true;
-//    }
+    @Override
+    public void removeBudgetById(String id) {
+        budgetRepository.deleteById(id);
+    }
+
+
 }

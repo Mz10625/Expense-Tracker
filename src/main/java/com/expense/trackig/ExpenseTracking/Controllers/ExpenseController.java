@@ -54,6 +54,8 @@ public class ExpenseController {
         double totalSpent = expenses.stream().mapToDouble(Expense::getAmount).sum();
         double remainingBudget = allocatedBudget - totalSpent;
 
+        month = month.charAt(0)+month.substring(1).toLowerCase();
+
         model.addAttribute("months",expenseService.getMonths());
         model.addAttribute("years",expenseService.getYears());
         model.addAttribute("category", category);
@@ -109,6 +111,7 @@ public class ExpenseController {
         expenseService.removeExpense(email,id);
         return "Expense deleted";
     }
+
     @GetMapping("/budgetNotAllocatedError")
     @ResponseBody
     public String budgetNotAllocatedError(){
