@@ -29,6 +29,7 @@ public class CategoryServiceImpl implements CategoriesService {
     public void saveCategory(String email,Category category) {
         User user = userService.getUserByEmail(email);
         user.getCategories().add(category);
+        categoryRepository.save(category);
         userService.saveUser(user);
     }
     @Override
