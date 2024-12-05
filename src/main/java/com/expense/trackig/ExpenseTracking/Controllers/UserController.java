@@ -3,6 +3,7 @@ import com.expense.trackig.ExpenseTracking.Modules.User;
 import com.expense.trackig.ExpenseTracking.Services.Interface.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +17,12 @@ public class UserController {
     @Autowired
     UserService userService;
     @PostMapping("/login")
-    public String login(@ModelAttribute User u, HttpServletResponse response){
+    public String login(@ModelAttribute User u, HttpSession session){
        User user = userService.getUserByEmailAndPassword(u.getEmail(),u.getPassword());
        if(user == null){
            return "redirect:/public/login";
        }
-        userService.setCookie(response);
+        session.setAttribute(u.getEmail(),"e-mail");
         return "redirect:/category/dashboard/"+u.getEmail();
     }
     @PostMapping("/sign-in")
@@ -34,12 +35,9 @@ public class UserController {
         userService.saveUser(newUser);
         return "redirect:/public/login";
     }
-    @GetMapping("/logout")
-    public String logout(HttpServletResponse response){
-        Cookie cookie = new Cookie("expense_cookie", null);
-        cookie.setMaxAge(0);
-        cookie.setPath("/");
-        response.addCookie(cookie);
+    @GetMapping("/logout/{email}")
+    public String logout(@PathVariable("email") String email, HttpSession session){
+        session.removeAttribute(email);
         return "login";
     }
 }

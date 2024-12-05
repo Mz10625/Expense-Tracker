@@ -4,6 +4,7 @@ import com.expense.trackig.ExpenseTracking.Modules.Expense;
 import com.expense.trackig.ExpenseTracking.Services.Interface.BudgetService;
 import com.expense.trackig.ExpenseTracking.Services.Interface.ExpenseService;
 import com.expense.trackig.ExpenseTracking.Services.Interface.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,8 +24,8 @@ public class ExpenseController {
     private UserService userService;
 
     @GetMapping("/{category}/{email}")
-    public String showExpensePage(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@PathVariable("category") String category,Model model){
-        if(!userService.isLoggedIn(cookie))
+    public String showExpensePage(@PathVariable("email") String email, HttpSession session,@PathVariable("category") String category,Model model){
+        if(session.getAttribute(email) == null || !session.getAttribute(email).equals("e-mail"))
             return "redirect:/public/login";
         model.addAttribute("email",email);
         model.addAttribute("selectedMonth","November");
@@ -39,13 +40,13 @@ public class ExpenseController {
 
     @GetMapping("/getExpenses")
     public String viewCategory(
-            @CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,
             @RequestParam("category") String category,
             @RequestParam("month") String month,
             @RequestParam("year") int year,
             @RequestParam("email") String email,
+            HttpSession session,
             Model model) {
-        if(!userService.isLoggedIn(cookie))
+        if(session.getAttribute(email) == null || !session.getAttribute(email).equals("e-mail"))
             return "redirect:/public/login";
 
         List<Expense> expenses = expenseService.getAllExpenses(email,Month.valueOf(month.toUpperCase()).toString(),year,category);
@@ -70,8 +71,8 @@ public class ExpenseController {
     }
 
     @GetMapping("/addExpenseForm/{category}/{email}")
-    public String showExpenseForm(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@PathVariable("category") String category,Model model) {
-        if(!userService.isLoggedIn(cookie))
+    public String showExpenseForm(@PathVariable("email") String email, HttpSession session,@PathVariable("category") String category,Model model) {
+        if(session.getAttribute(email) == null || !session.getAttribute(email).equals("e-mail"))
             return "redirect:/public/login";
         model.addAttribute("category",category);
         model.addAttribute("email",email);
@@ -81,9 +82,9 @@ public class ExpenseController {
     @PostMapping("/addExpense/{email}")
     public String addExpense(
             @PathVariable("email") String email,
-            @CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@ModelAttribute Expense expense
+            HttpSession session ,@ModelAttribute Expense expense
     ) {
-        if(!userService.isLoggedIn(cookie))
+        if(session.getAttribute(email) == null || !session.getAttribute(email).equals("e-mail"))
             return "redirect:/public/login";
 
         double allocatedBudget = budgetService.getAllocatedBudget(email,expense.getDate().getMonth().toString(),expense.getDate().getYear(),expense.getCategory());
@@ -105,8 +106,8 @@ public class ExpenseController {
     }
     @GetMapping("/remove/{id}/{email}")
     @ResponseBody
-    public String remove(@PathVariable("email") String email,@PathVariable("id") String id,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie){
-        if(!userService.isLoggedIn(cookie))
+    public String remove(@PathVariable("email") String email,@PathVariable("id") String id, HttpSession session){
+        if(session.getAttribute(email) == null || !session.getAttribute(email).equals("e-mail"))
             return "redirect:/public/login";
         expenseService.removeExpense(email,id);
         return "Expense deleted";

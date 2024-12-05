@@ -79,7 +79,7 @@
 
 <div class="app-header">
     <h1>Expense Tracker</h1>
-    <a href="/user/logout" class="logout-btn">Logout</a>
+    <a th:href="@{/user/logout/{email}(email=${email})}" class="logout-btn">Logout</a>
 </div>
 
 <div class="dashboard-container">
@@ -87,7 +87,7 @@
         <button class="add-category-btn" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
             <i class="fas fa-plus"></i>
         </button>
-        <button class="visualize-btn me-3">Visualize</button>
+<!--        <button class="visualize-btn me-3">Visualize</button>-->
     </div>
 
     <div class="table-container">

@@ -4,6 +4,7 @@ import com.expense.trackig.ExpenseTracking.Modules.Category;
 import com.expense.trackig.ExpenseTracking.Services.Implementation.CategoryServiceImpl;
 import com.expense.trackig.ExpenseTracking.Services.Interface.CategoriesService;
 import com.expense.trackig.ExpenseTracking.Services.Interface.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +19,8 @@ public class CategoryController {
     UserService userService;
 
     @GetMapping("/dashboard/{email}")
-    public String dashboard(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,Model model){
-        if(!userService.isLoggedIn(cookie))
+    public String dashboard(@PathVariable("email") String email, Model model, HttpSession session){
+        if(session.getAttribute(email) == null || !session.getAttribute(email).equals("e-mail"))
             return "redirect:/public/login";
         model.addAttribute("categories",categoryService.getAllCategories(email));
         model.addAttribute("email",email);
@@ -27,8 +28,8 @@ public class CategoryController {
     }
 
     @PostMapping("/add/{email}")
-    public String addCategory(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@ModelAttribute Category category){
-        if(!userService.isLoggedIn(cookie))
+    public String addCategory(@PathVariable("email") String email,HttpSession session ,@ModelAttribute Category category){
+        if(session.getAttribute(email) == null || !session.getAttribute(email).equals("e-mail"))
             return "redirect:/public/login";
         try {
             categoryService.saveCategory(email,category);
@@ -38,8 +39,8 @@ public class CategoryController {
         return "redirect:/category/dashboard/"+email;
     }
     @GetMapping("/remove/{email}/{name}")
-    public String removeCategory(@PathVariable("email") String email,@CookieValue(value = "expense_cookie", defaultValue = "null") String cookie,@PathVariable("name") String name){
-        if(!userService.isLoggedIn(cookie))
+    public String removeCategory(@PathVariable("email") String email,HttpSession session ,@PathVariable("name") String name){
+        if(session.getAttribute(email) == null || !session.getAttribute(email).equals("e-mail"))
             return "redirect:/public/login";
         try {
             categoryService.removeCategory(email,name);
